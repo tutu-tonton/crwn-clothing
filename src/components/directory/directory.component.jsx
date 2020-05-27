@@ -1,6 +1,6 @@
 // トップページのコンテナ
 // 各商品画像・真ん中にタイトル　<- これが5種類分
-// state所有
+// stateにカテゴリ名・画像・url所有
 
 import React from 'react';
 
