@@ -1,3 +1,7 @@
+// トップページのコンテナ
+// 各商品画像・真ん中にタイトル　<- これが5種類分
+// state所有
+
 import React from 'react';
 
 import MenuItem from '../menu-item/menu-item.component';
@@ -29,7 +33,7 @@ class Directory extends React.Component {
 					linkUrl: '',
 				},
 				{
-					title: 'womens',
+					title: 'women',
 					imageUrl: 'https://i.ibb.co/GCCdy8t/womens.png',
 					size: 'large',
 					id: 4,

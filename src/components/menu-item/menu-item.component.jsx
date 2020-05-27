@@ -1,3 +1,6 @@
+// トップページにある各商品画像とタイトル　1組分
+// クリックすると各カテゴリページに飛ぶ
+
 import React from 'react';
 import { withRouter } from 'react-router-dom';
 
