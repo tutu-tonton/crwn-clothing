@@ -42,17 +42,12 @@ class App extends React.Component {
 
 				userRef.onSnapshot((snapShot) => {
 					// console.log(snapShot);
-					this.setState(
-						{
-							currentUser: {
-								id: snapShot.id,
-								...snapShot.data(),
-							},
+					this.setState({
+						currentUser: {
+							id: snapShot.id,
+							...snapShot.data(),
 						},
-						() => {
-							console.log(this.state);
-						}
-					);
+					});
 				});
 			}
 
@@ -60,8 +55,11 @@ class App extends React.Component {
 		});
 	}
 
+	//========================================
+	//	ログインログアウトイベントのリスニングを停止
+	//========================================
+
 	componentWillUnmount() {
-		// ログインログアウトイベントのリスニングを停止
 		this.unsubscribeFromAuth();
 	}
 
