@@ -1,6 +1,6 @@
 //========================================
 //  signinコンポーネント
-//  Email,passwordでのサインイン
+//  Email,passwordでのサインイン + Googleでサインイン
 //  stateあり　email, password
 //========================================
 
@@ -41,7 +41,10 @@ class SignIn extends React.Component {
 		}
 	};
 
-	// 入力欄に変更あったら...
+	//========================================
+	//  Changeイベント
+	//========================================
+
 	handleChange = (event) => {
 		// event.targetでイベント起こった場所のHTML要素取得 <input .../>
 		const { value, name } = event.target;
@@ -79,7 +82,7 @@ class SignIn extends React.Component {
 					{/* <label>Password</label> */}
 					<div className="buttons">
 						<CustomButton type="submit">Sign in</CustomButton>
-						<CustomButton onClick={signInWithGoogle} isGoogleSignIn>
+						<CustomButton type="button" onClick={signInWithGoogle} isGoogleSignIn>
 							Sign in with Google
 						</CustomButton>
 					</div>
