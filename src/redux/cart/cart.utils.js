@@ -12,5 +12,6 @@ export const addItemToCart = (cartItems, cartItemToAdd) => {
 			cartItem.id === cartItemToAdd.id ? { ...cartItem, quantity: cartItem.quantity + 1 } : cartItem
 		);
 	}
+	// オブジェクトに新しいプロパティ追加
 	return [...cartItems, { ...cartItemToAdd, quantity: 1 }];
 };

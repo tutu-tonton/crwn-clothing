@@ -2,7 +2,7 @@
 //  商品の個別コンポーネント
 //  上に画像、下に商品名・価格
 //	collection-preview.component >
-//	> custombutton.component
+//	> customButton.component
 //========================================
 
 import React from 'react';
