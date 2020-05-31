@@ -1,4 +1,8 @@
-// 各カテゴリのタイトルと4つの品物が表示される個別コンポーネント <- 1組分
+//========================================
+//  カテゴリタイトル+4つの品物 が表示される個別コンポーネント <- 1組分
+//	shop.component >
+//	> collection-item.component
+//========================================
 
 import React from 'react';
 
@@ -14,8 +18,8 @@ const CollectionPreview = ({ title, items }) => (
 		<div className="preview">
 			{items
 				.filter((item, idx) => idx < 4)
-				.map(({ id, ...otherItemProps }) => (
-					<CollectionItem key={id} {...otherItemProps} />
+				.map((item) => (
+					<CollectionItem key={item.id} item={item} />
 				))}
 		</div>
 	</div>
