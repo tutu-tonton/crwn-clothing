@@ -1,7 +1,8 @@
 //========================================
 //  カートアイコンをクリックするとdropdown出てくる
-//	state参照
+//	カートに入れたアイテム情報が表示される
 //	redux-reselector必要
+//  header.component >
 //========================================
 
 import React from 'react';
@@ -19,6 +20,8 @@ import './cart-dropdown.styles.scss';
 // dispatch省略型
 const CartDropdown = ({ cartItems, history, dispatch }) => (
 	<div className="cart-dropdown">
+		{/* カートにアイテムあれば商品情報表示 */}
+		{/* カートに何もアイテムなければ文章表示 */}
 		<div className="cart-items">
 			{cartItems.length ? (
 				cartItems.map((cartItem) => <CartItem key={cartItem.id} item={cartItem} />)
@@ -42,3 +45,14 @@ const mapStateToProps = createStructuredSelector({
 });
 
 export default withRouter(connect(mapStateToProps)(CartDropdown));
+
+//========================================
+//  カートに入った商品情報
+//
+//========================================
+// {
+// 	id: 1,
+// 	name: 'Brown Brim',
+// 	imageUrl: 'https://i.ibb.co/ZYW3VTp/brown-brim.png',
+// 	price: 25,
+// },

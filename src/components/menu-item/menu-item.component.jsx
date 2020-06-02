@@ -1,5 +1,8 @@
-// トップページにある各商品画像とタイトル　1組分
+//========================================
+// トップページにある各商品画像とタイトル　<--1組分
 // クリックすると各カテゴリページに飛ぶ
+//
+//========================================
 
 import React from 'react';
 import { withRouter } from 'react-router-dom';
@@ -19,4 +22,5 @@ const MenuItem = ({ title, imageUrl, size, history, linkUrl, match }) => (
 );
 
 // withRouterで囲むことで、historyが使える
+// ネストされててもOK
 export default withRouter(MenuItem);

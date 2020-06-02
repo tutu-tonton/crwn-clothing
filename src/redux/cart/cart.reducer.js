@@ -1,4 +1,5 @@
 //========================================
+//  cartReducer:
 //  dropdownを開閉する
 //  カート内アイテム管理
 //========================================
@@ -14,6 +15,7 @@ const INITIAL_STATE = {
 const cartReducer = (state = INITIAL_STATE, action) => {
 	switch (action.type) {
 		// ドロップダウン開閉
+		// hidden値を反転させる
 		case CartActionTypes.TOGGLE_CART_HIDDEN:
 			return {
 				...state,
@@ -33,6 +35,7 @@ const cartReducer = (state = INITIAL_STATE, action) => {
 			};
 
 		// カートから商品を完全削除
+		// 選択アイテム以外で新配列作る
 		case CartActionTypes.CLEAR_ITEM_FROM_CART:
 			return {
 				...state,

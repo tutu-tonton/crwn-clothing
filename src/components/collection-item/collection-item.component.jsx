@@ -1,6 +1,7 @@
 //========================================
-//  商品の個別コンポーネント
+//  個別商品のコンポーネント
 //  上に画像、下に商品名・価格
+//  props: 親コンポーネントから個別商品オブジェクト受け取っている
 //	collection-preview.component >
 //	> customButton.component
 //========================================
@@ -22,6 +23,9 @@ const CollectionItem = ({ item, addItem }) => {
 				<span className="name">{name}</span>
 				<span className="price">{price}</span>
 			</div>
+			{/* 普段は非表示 */}
+			{/* ホバーすると表示 */}
+			{/* クリックするとアイテム追加action発動 */}
 			<CustomButton onClick={() => addItem(item)} inverted>
 				Add to cart
 			</CustomButton>
@@ -34,3 +38,15 @@ const mapDispatchToProps = (dispatch) => ({
 });
 
 export default connect(null, mapDispatchToProps)(CollectionItem);
+
+//========================================
+//  参考：
+//  props: item
+//  １つ分の商品情報
+//========================================
+// {
+// 	id: 1,
+// 	name: 'Brown Brim',
+// 	imageUrl: 'https://i.ibb.co/ZYW3VTp/brown-brim.png',
+// 	price: 25,
+// },

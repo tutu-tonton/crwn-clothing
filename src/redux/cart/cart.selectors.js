@@ -1,20 +1,21 @@
 //========================================
 //  redux-reselector部分
-//  stateから一部分の値のみを参照
+//  stateから一部分の値のみを参照したい
 //========================================
 
 import { createSelector } from 'reselect';
 
-// input selector
-// state全体から一部のみを選択
+//  input selector
+//  state全体から一部を選択
+//  reducerによりcartという名前がついてる。　state = user + cart
 const selectCart = (state) => state.cart;
 
 // const selectUser = state => state.user;
 
-// stateからcart.hidden部分のみを持ってくる
+// stateのcartからさらにhidden部分のみを選択
 export const selectCartHidden = createSelector([selectCart], (cart) => cart.hidden);
 
-// stateからcartItems部分のみを持ってくる
+// stateのcartからさらにcartItems部分のみを選択
 export const selectCartItems = createSelector([selectCart], (cart) => cart.cartItems);
 
 // カート内の総アイテム数を計算
@@ -22,7 +23,7 @@ export const selectCartItemsCount = createSelector([selectCartItems], (cartItems
 	cartItems.reduce((accumalatedQuantity, cartItem) => accumalatedQuantity + cartItem.quantity, 0)
 );
 
-// 総計を計算
+// カート内の総計を計算
 export const selectCartTotal = createSelector([selectCartItems], (cartItems) =>
 	cartItems.reduce((accumalatedQuantity, cartItem) => accumalatedQuantity + cartItem.quantity * cartItem.price, 0)
 );

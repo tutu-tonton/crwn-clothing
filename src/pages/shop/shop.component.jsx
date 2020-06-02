@@ -1,9 +1,10 @@
-// ホーム直下のページ。
-// 各カテゴリ毎にタイトル・画像・商品名の組み合わせ4つ分
-// それが5カテゴリ分表示される
-// stateにショップデータ保有
-// ショップデータは別ファイルで保管。インポートする
-
+//========================================
+//  ホーム直下のページ。
+//  各カテゴリ毎にタイトル・画像・商品名の組み合わせ <- 4つ分
+//  5カテゴリ分表示される
+//  stateにショップデータ保有. ショップデータは別ファイルで保管。インポートする
+//  > CollectionPreview.component
+//========================================
 import React from 'react';
 
 import SHOP_DATA from './shop.data';
@@ -22,6 +23,7 @@ class ShopPage extends React.Component {
 	render() {
 		const { collections } = this.state;
 		return (
+			// カテゴリ毎にCollectionPreviewコンポを出力
 			<div className="shop-page">
 				{collections.map(({ id, ...otherCollectionProps }) => (
 					<CollectionPreview key={id} {...otherCollectionProps} />
