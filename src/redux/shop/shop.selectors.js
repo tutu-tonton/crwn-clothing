@@ -21,6 +21,14 @@ const selectShop = (state) => state.shop;
 
 export const selectCollections = createSelector([selectShop], (shop) => shop.collections);
 
+// 正規化したことによりcollectionは配列ではなくなった
+//
+export const selectCollectionsForPreview = createSelector(
+	[selectCollections],
+	// object.keys オブジェクトのキーで配列を作る
+	(collections) => Object.keys(collections).map((key) => collections[key])
+);
+
 export const selectCollection = (collectionUrlParam) =>
 	createSelector(
 		[selectCollections],
