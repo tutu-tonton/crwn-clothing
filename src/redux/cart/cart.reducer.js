@@ -11,6 +11,13 @@ const INITIAL_STATE = {
 	hidden: true,
 	cartItems: [],
 };
+// root-reducerにより次のようになる
+// state: {
+// 		cart: {
+// 			hidden: true,
+// 			cartItems: [],
+// 		}
+// }
 
 const cartReducer = (state = INITIAL_STATE, action) => {
 	switch (action.type) {
@@ -35,7 +42,7 @@ const cartReducer = (state = INITIAL_STATE, action) => {
 			};
 
 		// カートから商品を完全削除
-		// 選択アイテム以外で新配列作る
+		// 削除アイテム以外で新配列作る
 		case CartActionTypes.CLEAR_ITEM_FROM_CART:
 			return {
 				...state,

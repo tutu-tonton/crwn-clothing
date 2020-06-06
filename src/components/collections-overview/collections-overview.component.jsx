@@ -1,6 +1,6 @@
 //========================================
-//  トップページ内のコンポーネント
-//  各カテゴリが表示されるコンテナ
+//  ショップページ内のコンポーネント
+//  カテゴリ毎に表示させるための枠・コンテナ
 //  reduxからのprops: collections
 //========================================
 
@@ -28,3 +28,16 @@ const mapStateToProps = createStructuredSelector({
 });
 
 export default connect(mapStateToProps)(CollectionsOverview);
+
+//========================================
+// 	{
+// 		id: 1,
+// 		title: 'Hats',
+// 		routeName: 'hats',
+// 		items: [
+// 			{
+// 				id: 1,
+// 				name: 'Brown Brim',
+// 				imageUrl: 'https://i.ibb.co/ZYW3VTp/brown-brim.png',
+// 				price: 25,
+// 			},
