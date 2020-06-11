@@ -20,7 +20,8 @@ import { selectCurrentUser } from './redux/user/user.selectors';
 import './App.css';
 class App extends React.Component {
 	//========================================
-	// GoogleAuthログインアウトリッスン
+	// componentDidMount:AuthStateをリッスン開始する
+	// componentWillUnmount: AuthStateリッスンを終了する
 	//========================================
 
 	unsubscribeFromAuth = null;
@@ -33,27 +34,35 @@ class App extends React.Component {
 		// auth.onAuthStateChanged()はfirebase.unsubscribe()を返す
 		// firebase.unsubscribe()はログインアウトイベントリスニングを止めるメソッド
 		this.unsubscribeFromAuth = auth.onAuthStateChanged(async (userAuth) => {
-			// this.setState({ currentUser: user });
+			// this.setState({ currentUser: user });	// 最初はこのコンポーネント内にstateを作っていた
 			// createUserProfileDocument(user);
+
+			// ログインしようとすると、createUserProfileDocumentメソッド発動
+			// ユーザー情報がfirestoreに登録済みかどうか、未登録なら登録
 			if (userAuth) {
 				const userRef = await createUserProfileDocument(userAuth);
 
 				//==============================
 				//	ユーザー情報をstateに保存
 				//	ユーザー情報をstoreに保存
+				//  onSnapshotメソッド:
+				//  ユーザー情報変更があったらすぐにfirestore側も変更反映されるように
 				//==============================
-
 				userRef.onSnapshot((snapShot) => {
-					// console.log(snapShot);
-					// ユーザーがログインしていて、userRefオブジェクトを確認する
+					// console.log(snapShot);	// これだけだとまだデータ本体は表示されない
+					// console.log(snapShot.data());	// これでデータ本体が表示
+
+					// auth.uid で ユーザードキュメント作成してる
+					// そのドキュメントのIDが auth.uid
 					setCurrentUser({
-						id: snapShot.id,
+						id: snapShot.id, // ドキュメントのID
 						...snapShot.data(),
 					});
 				});
+				// console.log(this.state);	// 確認
 			}
 
-			// ログアウトしている場合は、nullに更新
+			// ログアウトしている場合は、state側もnullに更新
 			setCurrentUser(userAuth);
 		});
 	}

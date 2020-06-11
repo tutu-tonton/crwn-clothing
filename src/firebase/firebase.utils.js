@@ -22,14 +22,16 @@ export const createUserProfileDocument = async (userAuth, additionalData) => {
 	// ログアウト状態なら何もしない
 	if (!userAuth) return;
 
-	// referenceが取得できる？
+	// referenceを取得する
+	// referenceは実際にデータが存在してなくても返ってくる
 	// console.log(firestore.doc('users/140dagrhd'));
 	const userRef = firestore.doc(`users/${userAuth.uid}`);
-
+	// snapshotオブジェクトを取得
+	// クエリした情報が実際に存在してるかどうか　.existsプロパティ　を持つ
 	const snapShot = await userRef.get();
-	// snapshotにid,データベースに登録済みかの情報入ってる
-	console.log(snapShot);
+	console.log(snapShot); // existsプロパティを確認
 
+	// firestore内にそのユーザーのドキュメントが未作成の場合
 	if (!snapShot.exists) {
 		const { displayName, email } = userAuth;
 		const createdAt = new Date();
@@ -55,6 +57,7 @@ export const auth = firebase.auth();
 export const firestore = firebase.firestore();
 
 const provider = new firebase.auth.GoogleAuthProvider();
+// google認証を使用するときはpopup表示
 // ユーザーが以前にアクセスを承認した場合でも、常にアカウントを選択するようにできる
 // 複数アカウント持ってる場合に便利
 provider.setCustomParameters({ prompt: 'select_account' });
