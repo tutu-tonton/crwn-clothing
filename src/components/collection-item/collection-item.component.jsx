@@ -26,7 +26,7 @@ const CollectionItem = ({ item, addItem }) => {
 			{/* 普段は非表示 */}
 			{/* ホバーすると表示 */}
 			{/* クリックするとアイテム追加action発動 */}
-			<CustomButton onClick={() => addItem(item)} inverted>
+			<CustomButton className="custom-button" onClick={() => addItem(item)} inverted>
 				Add to cart
 			</CustomButton>
 		</div>

@@ -51,6 +51,39 @@ export const createUserProfileDocument = async (userAuth, additionalData) => {
 	return userRef;
 };
 
+//========================================
+//　firestoreにshopデータを移動する
+//  あるコレクションにデータ追加
+//  collectionKey: どのcollectionに入れたいか？
+//
+//========================================
+export const addCollectionAndDocuments = async (collectionKey, objectsToAdd) => {
+	const collectionRef = firestore.collection(collectionKey);
+	console.log(collectionRef); // オブジェクトidにcollectionKey入る
+
+	// アップロード途中で通信途切れたときには、全て失敗判定にする
+	// リクエストを1グループにする。グループがきちんと完了して成功となる
+	// batch right
+	const batch = firestore.batch();
+	// forEach: 新配列とならない。元の配列上書き
+	objectsToAdd.forEach((obj) => {
+		// ??? documentのid部分をユニークにしたいので、ランダムに振る
+		const newDocRef = collectionRef.doc();
+		// collectionRef.doc():ランダムにidが振られている
+		// collectionRef.doc(obj.title):タイトルがidが振られている
+		// console.log(newDocRef);
+		// obj全てにidを割り振る作業をバッチ処理
+		batch.set(newDocRef, obj);
+	});
+
+	// バッチコール開始
+	return await batch.commit();
+};
+
+//========================================
+//  初期設定
+//
+//========================================
 firebase.initializeApp(config);
 
 export const auth = firebase.auth();
@@ -64,3 +97,23 @@ provider.setCustomParameters({ prompt: 'select_account' });
 export const signInWithGoogle = () => auth.signInWithPopup(provider);
 
 export default firebase;
+
+//========================================
+//  163.164. ショップデータをFirebaseに移動する
+//
+//
+//========================================
+
+//========================================
+// const SHOP_DATA = [
+// 	{
+// 		id: 1,
+// 		title: 'Hats',
+// 		routeName: 'hats',
+// 		items: [
+// 			{
+// 				id: 1,
+// 				name: 'Brown Brim',
+// 				imageUrl: 'https://i.ibb.co/ZYW3VTp/brown-brim.png',
+// 				price: 25,
+// 			},

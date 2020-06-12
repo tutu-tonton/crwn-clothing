@@ -13,9 +13,11 @@ import SignInAndSignUpPage from './pages/sign-in-and-sign-up/sign-in-and-sign-up
 import CheckoutPage from './pages/checkout/checkout.component';
 
 import { auth, createUserProfileDocument } from './firebase/firebase.utils';
+// import { auth, createUserProfileDocument, addCollectionAndDocuments } from './firebase/firebase.utils';	// addCollectionAndDocumentsはshopDataをfirestoreに移す時に使用した
 
 import { setCurrentUser } from './redux/user/user.actions';
 import { selectCurrentUser } from './redux/user/user.selectors';
+// import { selectCollectionsForPreview } from './redux/shop/shop.selectors';	//shopDataをfirestoreに移す時に使用した
 
 import './App.css';
 class App extends React.Component {
@@ -27,7 +29,8 @@ class App extends React.Component {
 	unsubscribeFromAuth = null;
 
 	componentDidMount() {
-		const { setCurrentUser } = this.props;
+		const { setCurrentUser } = this.props; // mapstatetopropsより
+		// const { setCurrentUser, collectionsArray } = this.props; // collectionsArrayはshopdataをfirestoreに移すときに使用した
 
 		// firebase authのメソッド
 		// userオブジェクトにuser情報入ってる
@@ -64,6 +67,12 @@ class App extends React.Component {
 
 			// ログアウトしている場合は、state側もnullに更新
 			setCurrentUser(userAuth);
+			// firestore内のcollectionに追加する
+			// 現在のshopDataには余分な情報が含まれてる。title,itemsだけfirestoreに保存したい
+			addCollectionAndDocuments(
+				'collections',
+				collectionsArray.map(({ title, items }) => ({ title, items }))
+			);
 		});
 	}
 
@@ -97,6 +106,7 @@ class App extends React.Component {
 
 const mapStateToProps = createStructuredSelector({
 	currentUser: selectCurrentUser,
+	// collectionsArray: selectCollectionsForPreview,	// shopDataをfirestoreに移す時に使用した
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -104,3 +114,23 @@ const mapDispatchToProps = (dispatch) => ({
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);
+
+//========================================
+//  163.164. ショップデータをFirebaseに移動する
+//
+//
+//========================================
+
+//========================================
+// const SHOP_DATA = [
+// 	{
+// 		id: 1,
+// 		title: 'Hats',
+// 		routeName: 'hats',
+// 		items: [
+// 			{
+// 				id: 1,
+// 				name: 'Brown Brim',
+// 				imageUrl: 'https://i.ibb.co/ZYW3VTp/brown-brim.png',
+// 				price: 25,
+// 			},

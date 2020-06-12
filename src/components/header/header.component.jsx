@@ -20,7 +20,7 @@ import { selectCurrentUser } from '../../redux/user/user.selectors';
 // svgファイルの読み込み方
 import { ReactComponent as Logo } from '../../assets/crown.svg';
 
-import { HeaderContainer, LogoContainer, OptionsContainer, OptionLink, OptionDiv } from './header.styles';
+import { HeaderContainer, LogoContainer, OptionsContainer, OptionLink } from './header.styles';
 // import './header.styles.scss';
 
 // storeからprops渡ってきてる
@@ -35,7 +35,9 @@ const Header = ({ currentUser, hidden }) => (
 			{/* ログインしてるしてないで表示変わる */}
 			{currentUser ? (
 				// ログインしている時
-				<OptionDiv onClick={() => auth.signOut()}>SIGN OUT</OptionDiv>
+				<OptionLink as="div" onClick={() => auth.signOut()}>
+					SIGN OUT
+				</OptionLink>
 			) : (
 				<OptionLink to="/signin">SIGN IN</OptionLink>
 			)}
