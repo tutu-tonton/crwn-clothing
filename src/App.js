@@ -67,12 +67,13 @@ class App extends React.Component {
 
 			// ログアウトしている場合は、state側もnullに更新
 			setCurrentUser(userAuth);
+			// shopDataをfirestoreに移す時に使用した
 			// firestore内のcollectionに追加する
 			// 現在のshopDataには余分な情報が含まれてる。title,itemsだけfirestoreに保存したい
-			addCollectionAndDocuments(
-				'collections',
-				collectionsArray.map(({ title, items }) => ({ title, items }))
-			);
+			// addCollectionAndDocuments(
+			// 	'collections',
+			// 	collectionsArray.map(({ title, items }) => ({ title, items }))
+			// );
 		});
 	}
 
@@ -116,8 +117,9 @@ const mapDispatchToProps = (dispatch) => ({
 export default connect(mapStateToProps, mapDispatchToProps)(App);
 
 //========================================
-//  163.164. ショップデータをFirebaseに移動する
-//
+// 163.164. ショップデータをFirebaseに移動する
+// 166. Bringing Shop Data to our app
+// 	firestoreからデータを持ってきて、routeに必要な情報を追加した
 //
 //========================================
 

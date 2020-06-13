@@ -17,13 +17,11 @@ const config = {
 //	Googleでサインインしたユーザーが、データベースに登録済みかどうか
 //	未登録ならユーザー登録する
 //============================================================
-
 export const createUserProfileDocument = async (userAuth, additionalData) => {
 	// ログアウト状態なら何もしない
 	if (!userAuth) return;
 
-	// referenceを取得する
-	// referenceは実際にデータが存在してなくても返ってくる
+	// referenceを取得する. referenceは実際にデータが存在してなくても返ってくる
 	// console.log(firestore.doc('users/140dagrhd'));
 	const userRef = firestore.doc(`users/${userAuth.uid}`);
 	// snapshotオブジェクトを取得
@@ -68,6 +66,7 @@ export const addCollectionAndDocuments = async (collectionKey, objectsToAdd) => 
 	// forEach: 新配列とならない。元の配列上書き
 	objectsToAdd.forEach((obj) => {
 		// ??? documentのid部分をユニークにしたいので、ランダムに振る
+		// firestore内に格納したいので、ref部分どうするのか？　-> ランダムにref作る
 		const newDocRef = collectionRef.doc();
 		// collectionRef.doc():ランダムにidが振られている
 		// collectionRef.doc(obj.title):タイトルがidが振られている
@@ -78,6 +77,25 @@ export const addCollectionAndDocuments = async (collectionKey, objectsToAdd) => 
 
 	// バッチコール開始
 	return await batch.commit();
+};
+
+//========================================
+//  firestoreからshopDataを引っ張ってくる
+//  firestoreにはtitle,itemsしかないから、routeに必要な情報を付け足す関数
+//
+//========================================
+export const convertCollectionSnapshotToMap = (collections) => {
+	const transformedCollection = collections.docs.map((doc) => {
+		const { title, items } = doc.data();
+
+		return {
+			routeName: encodeURI(title.toLowerCase()),
+			id: doc.id,
+			title,
+			items,
+		};
+	});
+	console.log(transformedCollection);
 };
 
 //========================================
@@ -99,8 +117,9 @@ export const signInWithGoogle = () => auth.signInWithPopup(provider);
 export default firebase;
 
 //========================================
-//  163.164. ショップデータをFirebaseに移動する
-//
+// 163.164. ショップデータをFirebaseに移動する
+// 166. Bringing Shop Data to our app
+// 	firestoreからデータを持ってきて、routeに必要な情報を追加した
 //
 //========================================
 
