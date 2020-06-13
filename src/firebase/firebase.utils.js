@@ -80,7 +80,7 @@ export const addCollectionAndDocuments = async (collectionKey, objectsToAdd) => 
 };
 
 //========================================
-//  firestoreからshopDataを引っ張ってくる
+//  firestoreからshopDataを引っ張ってくる -> オブジェクト形式にする
 //  firestoreにはtitle,itemsしかないから、routeに必要な情報を付け足す関数
 //
 //========================================
@@ -95,8 +95,29 @@ export const convertCollectionSnapshotToMap = (collections) => {
 			items,
 		};
 	});
-	console.log(transformedCollection);
+	// console.log(transformedCollection);	// firestoreからのデータに追記できてるか確認
+
+	// 配列をオブジェクトにする。
+	// その際に { title: {データ} } という形にする
+	return transformedCollection.reduce((accumulator, collection) => {
+		accumulator[collection.title.toLowerCase()] = collection;
+		return accumulator;
+	}, {});
 };
+//========================================
+//  オブジェクト形式のshopData
+//	hats: {
+//		id: 1,
+//		title: 'Hats',
+//		routeName: 'hats',
+//		items: [
+//			{
+//				id: 1,
+//				name: 'Brown Brim',
+//				imageUrl: 'https://i.ibb.co/ZYW3VTp/brown-brim.png',
+//				price: 25,
+//			},
+//========================================
 
 //========================================
 //  初期設定
@@ -120,6 +141,8 @@ export default firebase;
 // 163.164. ショップデータをFirebaseに移動する
 // 166. Bringing Shop Data to our app
 // 	firestoreからデータを持ってきて、routeに必要な情報を追加した
+// 167. Adding Shop Data to Redux
+//  redux.stateに保存する為に、action,reducer作成した
 //
 //========================================
 
