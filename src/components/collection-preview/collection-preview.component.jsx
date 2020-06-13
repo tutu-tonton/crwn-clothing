@@ -6,15 +6,19 @@
 //========================================
 
 import React from 'react';
+import { Link, withRouter } from 'react-router-dom';
 
 import CollectionItem from '../collection-item/collection-item.component';
 
 import './collection-preview.styles.scss';
 
-const CollectionPreview = ({ title, items }) => (
+const CollectionPreview = ({ title, items, match }) => (
 	<div className="collection-preview">
 		{/* 商品カテゴリ名 */}
-		<h1 className="title">{title.toUpperCase()}</h1>
+		<Link className="title" to={`${match.path}/${title.toLowerCase()}`}>
+			{title.toLowerCase()}
+		</Link>
+		{/* <h1 className="title">{title.toUpperCase()}</h1> */}
 		{/* 4つ分に絞る */}
 		{/* それぞれのアイテム情報を子コンポに渡す */}
 		<div className="preview">
@@ -27,7 +31,7 @@ const CollectionPreview = ({ title, items }) => (
 	</div>
 );
 
-export default CollectionPreview;
+export default withRouter(CollectionPreview);
 
 //========================================
 //  参考：

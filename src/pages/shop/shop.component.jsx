@@ -15,7 +15,18 @@ import { firestore, convertCollectionSnapshotToMap } from '../../firebase/fireba
 
 import { updateCollections } from '../../redux/shop/shop.actions';
 
+import WithSpinner from '../../components/with-spinner/with-spinner.component';
+
+const CollectionsOverviewWithSpinner = WithSpinner(CollectionsOverview);
+const CollectionPageWithSpinner = WithSpinner(CollectionPage);
+
 class ShopPage extends React.Component {
+	// 新しい書き方
+	state = {
+		// 最初はデータをfirestoreに取りに行くのでloading中
+		loading: true,
+	};
+
 	// ??? クラスプロパティ
 	unsubscribeFromSnapshot = null;
 
@@ -32,17 +43,28 @@ class ShopPage extends React.Component {
 			// console.log(collectionsMap);	// オブジェクト形式になってるか確認
 			// redux.stateに保存する
 			updateCollections(collectionsMap);
+			this.setState({ loading: false });
 		});
 	}
 
 	render() {
 		// app.js内でRouteされてるので、propsとしてmatch受け取る
 		const { match } = this.props;
+		const { loading } = this.state;
 		return (
 			// カテゴリ毎にCollectionPreviewコンポを出力
 			<div className="shop-page">
-				<Route exact path={`${match.path}`} component={CollectionsOverview} />
-				<Route path={`${match.path}/:collectionId`} component={CollectionPage} />
+				<Route
+					exact
+					path={`${match.path}`}
+					render={(props) => <CollectionsOverviewWithSpinner isLoading={loading} {...props} />}
+				/>
+				{/* <Route exact path={`${match.path}`} component={CollectionsOverview} /> */}
+				<Route
+					path={`${match.path}/:collectionId`}
+					render={(props) => <CollectionPageWithSpinner isLoading={loading} {...props} />}
+				/>
+				{/* <Route path={`${match.path}/:collectionId`} component={CollectionPage} /> */}
 			</div>
 		);
 	}
@@ -59,5 +81,6 @@ export default connect(null, mapDispatchToProps)(ShopPage);
 // 	firestoreからデータを持ってきて、routeに必要な情報を追加した
 // 167. Adding Shop Data to Redux
 //  redux.stateに保存する為に、action,reducer作成した
-//
+// 169. WithSpinner HOC
+//	 データが返ってくるまではローディング中表示
 //========================================

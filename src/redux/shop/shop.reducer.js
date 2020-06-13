@@ -1,9 +1,11 @@
-import SHOP_DATA from './shop.data';
+// import SHOP_DATA from './shop.data';
 
 import ShopActionTypes from './shop.types';
 
 const INITIAL_STATE = {
-	collections: SHOP_DATA,
+	// これは collections: [] の方がいいみたい？
+	collections: null,
+	// collections: SHOP_DATA,	// firestoreにデータを移したので削除
 };
 
 const shopReducer = (state = INITIAL_STATE, action) => {

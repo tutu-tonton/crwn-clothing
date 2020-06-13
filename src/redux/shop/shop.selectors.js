@@ -26,15 +26,15 @@ export const selectCollections = createSelector([selectShop], (shop) => shop.col
 export const selectCollectionsForPreview = createSelector(
 	[selectCollections],
 	// object.keys オブジェクトのキーで配列を作る
-	(collections) => Object.keys(collections).map((key) => collections[key])
+	(collections) => (collections ? Object.keys(collections).map((key) => collections[key]) : [])
 );
 
 export const selectCollection = (collectionUrlParam) =>
 	createSelector(
 		[selectCollections],
 		// データ正規化。オブジェクトに格納済み
-		(collections) => collections[collectionUrlParam]
-		// データ正規化前
+		(collections) => (collections ? collections[collectionUrlParam] : null)
+		// データ正規化前.　配列だからこれが使える
 		// (collections) => collections.find((collection) => collection.id === COLLECTION_ID_MAP[collectionUrlParam])
 	);
 
