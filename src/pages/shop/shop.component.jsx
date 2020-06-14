@@ -15,7 +15,7 @@ import CollectionPage from '../collection/collection.component';
 // import { firestore, convertCollectionSnapshotToMap } from '../../firebase/firebase.utils';
 
 import { fetchCollectionsStartAsync } from '../../redux/shop/shop.actions';
-import { selectIsCollectionFetching } from '../../redux/shop/shop.selectors';
+import { selectIsCollectionFetching, selectIsCollectionsLoaded } from '../../redux/shop/shop.selectors';
 // import { updateCollections } from '../../redux/shop/shop.actions';
 
 import WithSpinner from '../../components/with-spinner/with-spinner.component';
@@ -73,7 +73,7 @@ class ShopPage extends React.Component {
 
 	render() {
 		// app.js内でRouteされてるので、propsとしてmatch受け取る
-		const { match, isCollectionFetching } = this.props;
+		const { match, isCollectionFetching, isCollectionsLoaded } = this.props;
 		// const { loading } = this.state;
 		return (
 			// カテゴリ毎にCollectionPreviewコンポを出力
@@ -82,11 +82,16 @@ class ShopPage extends React.Component {
 					exact
 					path={`${match.path}`}
 					render={(props) => <CollectionsOverviewWithSpinner isLoading={isCollectionFetching} {...props} />}
+					// render={(props) => <CollectionsOverviewWithSpinner isLoading={isCollectionFetching} {...props} />}
 				/>
 				{/* <Route exact path={`${match.path}`} component={CollectionsOverview} /> */}
 				<Route
 					path={`${match.path}/:collectionId`}
-					render={(props) => <CollectionPageWithSpinner isLoading={isCollectionFetching} {...props} />}
+					// カテゴリページでページ再読み込みするとエラー発生
+					// 先にrenderが発動
+					// isLoading = isFetching は 初期値false で渡される。読み込まれる
+					render={(props) => <CollectionPageWithSpinner isLoading={!isCollectionsLoaded} {...props} />}
+					// render={(props) => <CollectionPageWithSpinner isLoading={isCollectionFetching} {...props} />}
 				/>
 				{/* <Route path={`${match.path}/:collectionId`} component={CollectionPage} /> */}
 			</div>
@@ -96,6 +101,7 @@ class ShopPage extends React.Component {
 
 const mapStateToProps = createStructuredSelector({
 	isCollectionFetching: selectIsCollectionFetching,
+	isCollectionsLoaded: selectIsCollectionsLoaded,
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -119,4 +125,11 @@ export default connect(mapStateToProps, mapDispatchToProps)(ShopPage);
 // 174. redux-thunk
 // 	 redux-thunkにより非同期でaction dispatch
 //   componentDidMount部分をredux-thunkへ移す
+// 176.
+// 	カテゴリページでページ再読み込みするとエラー発生
+// 	先にrenderが発動
+// 	isLoading = isFetching は 初期値false で渡される。読み込まれる
+//
+//
+//
 //========================================

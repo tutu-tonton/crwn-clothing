@@ -41,6 +41,24 @@ export const selectCollection = (collectionUrlParam) =>
 // データをfetch中かどうかを監視
 export const selectIsCollectionFetching = createSelector([selectShop], (shop) => shop.isFetching);
 
+// 本当にcollectionがロード中か？
+// カテゴリページを再読み込みするとエラー出る。isLoading
+export const selectIsCollectionsLoaded = createSelector(
+	[selectShop],
+	// !! : 値をtrue,falseに変換する. !!0 / !!null /
+	// collectionがロードされてたらtrue, されてなかったらfalse出力される
+	(shop) => !!shop.collections
+);
+
+//========================================
+// 176.
+// 	カテゴリページでページ再読み込みするとエラー発生
+// 	先にrenderが発動
+// 	isLoading = isFetching は 初期値false で渡される。読み込まれる
+//
+//
+//========================================
+
 //========================================
 // const SHOP_DATA = [
 // 	{
