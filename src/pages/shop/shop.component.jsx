@@ -6,14 +6,17 @@
 //========================================
 import React from 'react';
 import { Route } from 'react-router-dom';
+import { createStructuredSelector } from 'reselect';
 import { connect } from 'react-redux';
 
 import CollectionsOverview from '../../components/collections-overview/collections-overview.component';
 import CollectionPage from '../collection/collection.component';
 
-import { firestore, convertCollectionSnapshotToMap } from '../../firebase/firebase.utils';
+// import { firestore, convertCollectionSnapshotToMap } from '../../firebase/firebase.utils';
 
-import { updateCollections } from '../../redux/shop/shop.actions';
+import { fetchCollectionsStartAsync } from '../../redux/shop/shop.actions';
+import { selectIsCollectionFetching } from '../../redux/shop/shop.selectors';
+// import { updateCollections } from '../../redux/shop/shop.actions';
 
 import WithSpinner from '../../components/with-spinner/with-spinner.component';
 
@@ -21,33 +24,38 @@ const CollectionsOverviewWithSpinner = WithSpinner(CollectionsOverview);
 const CollectionPageWithSpinner = WithSpinner(CollectionPage);
 
 class ShopPage extends React.Component {
-	// 新しい書き方
-	state = {
-		// 最初はデータをfirestoreに取りに行くのでloading中
-		loading: true,
-	};
+	// -> redux-thunkに移した
+	// // 新しい書き方
+	// state = {
+	// 	// 最初はデータをfirestoreに取りに行くのでloading中
+	// 	loading: true,
+	// };
 
-	// ??? クラスプロパティ
-	unsubscribeFromSnapshot = null;
+	// // ??? クラスプロパティ
+	// unsubscribeFromSnapshot = null;
 
-	// firestoreからshopDataを持ってくる
-	// firestoreにはtitle,itemsの情報しかないから、その他の情報を付け足す関数を実行
 	componentDidMount() {
-		const { updateCollections } = this.props;
-		const collectionRef = firestore.collection('collections');
+		const { fetchCollectionsStartAsync } = this.props;
+		fetchCollectionsStartAsync();
 
-		// ??? オブザーバーパターン
-		// 一般的なdbでonSnapshot見たいのを実現したいとき？
-		collectionRef.get().then((snapshot) => {
-			// console.log(snapshot); // collection内に格納されてるドキュメントのメタ情報。配列形式
-			// データ引っ張ってきて、オブジェクト形式にする
-			const collectionsMap = convertCollectionSnapshotToMap(snapshot);
-			// console.log(collectionsMap);	// オブジェクト形式になってるか確認
-			// redux.stateに保存する
-			updateCollections(collectionsMap);
-			this.setState({ loading: false });
-		});
+		// -> redux-thunkに移した
+		// const { updateCollections } = this.props;
+		// const collectionRef = firestore.collection('collections');
+
+		// // ??? オブザーバーパターン
+		// // 一般的なdbでonSnapshot見たいのを実現したいとき？
+		// collectionRef.get().then((snapshot) => {
+		// 	// console.log(snapshot); // collection内に格納されてるドキュメントのメタ情報。配列形式
+		// 	// データ引っ張ってきて、オブジェクト形式にする
+		// 	const collectionsMap = convertCollectionSnapshotToMap(snapshot);
+		// 	// console.log(collectionsMap);	// オブジェクト形式になってるか確認
+		// 	// redux.stateに保存する
+		// 	updateCollections(collectionsMap);
+		// 	this.setState({ loading: false });
+		// });
 		// -----
+		// firestoreからshopDataを持ってくる
+		// firestoreにはtitle,itemsの情報しかないから、その他の情報を付け足す関数を実行
 		// collectionRef.onSnapshot(async (snapshot) => {
 		// 	// console.log(snapshot); // collection内に格納されてるドキュメントのメタ情報。配列形式
 		// 	// データ引っ張ってきて、オブジェクト形式にする
@@ -65,20 +73,20 @@ class ShopPage extends React.Component {
 
 	render() {
 		// app.js内でRouteされてるので、propsとしてmatch受け取る
-		const { match } = this.props;
-		const { loading } = this.state;
+		const { match, isCollectionFetching } = this.props;
+		// const { loading } = this.state;
 		return (
 			// カテゴリ毎にCollectionPreviewコンポを出力
 			<div className="shop-page">
 				<Route
 					exact
 					path={`${match.path}`}
-					render={(props) => <CollectionsOverviewWithSpinner isLoading={loading} {...props} />}
+					render={(props) => <CollectionsOverviewWithSpinner isLoading={isCollectionFetching} {...props} />}
 				/>
 				{/* <Route exact path={`${match.path}`} component={CollectionsOverview} /> */}
 				<Route
 					path={`${match.path}/:collectionId`}
-					render={(props) => <CollectionPageWithSpinner isLoading={loading} {...props} />}
+					render={(props) => <CollectionPageWithSpinner isLoading={isCollectionFetching} {...props} />}
 				/>
 				{/* <Route path={`${match.path}/:collectionId`} component={CollectionPage} /> */}
 			</div>
@@ -86,11 +94,20 @@ class ShopPage extends React.Component {
 	}
 }
 
-const mapDispatchToProps = (dispatch) => ({
-	updateCollections: (collectionsMap) => dispatch(updateCollections(collectionsMap)),
+const mapStateToProps = createStructuredSelector({
+	isCollectionFetching: selectIsCollectionFetching,
 });
 
-export default connect(null, mapDispatchToProps)(ShopPage);
+const mapDispatchToProps = (dispatch) => ({
+	fetchCollectionsStartAsync: () => dispatch(fetchCollectionsStartAsync()),
+});
+
+// 174. redux-thunkにより要らなくなる
+// const mapDispatchToProps = (dispatch) => ({
+// 	updateCollections: (collectionsMap) => dispatch(updateCollections(collectionsMap)),
+// });
+
+export default connect(mapStateToProps, mapDispatchToProps)(ShopPage);
 
 //========================================
 // 166. Bringing Shop Data to our app
@@ -99,4 +116,7 @@ export default connect(null, mapDispatchToProps)(ShopPage);
 //  redux.stateに保存する為に、action,reducer作成した
 // 169. WithSpinner HOC
 //	 データが返ってくるまではローディング中表示
+// 174. redux-thunk
+// 	 redux-thunkにより非同期でaction dispatch
+//   componentDidMount部分をredux-thunkへ移す
 //========================================

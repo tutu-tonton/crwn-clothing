@@ -38,6 +38,9 @@ export const selectCollection = (collectionUrlParam) =>
 		// (collections) => collections.find((collection) => collection.id === COLLECTION_ID_MAP[collectionUrlParam])
 	);
 
+// データをfetch中かどうかを監視
+export const selectIsCollectionFetching = createSelector([selectShop], (shop) => shop.isFetching);
+
 //========================================
 // const SHOP_DATA = [
 // 	{
