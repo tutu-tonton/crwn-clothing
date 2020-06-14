@@ -6,22 +6,25 @@
 //========================================
 import React from 'react';
 import { Route } from 'react-router-dom';
-import { createStructuredSelector } from 'reselect';
+// 177.コンテナパターンに含まれるようになったので削除
+// import { createStructuredSelector } from 'reselect';
 import { connect } from 'react-redux';
 
-import CollectionsOverview from '../../components/collections-overview/collections-overview.component';
-import CollectionPage from '../collection/collection.component';
+import CollectionsOverviewContainer from '../../components/collections-overview/collection-overview.container';
+// import CollectionsOverview from '../../components/collections-overview/collections-overview.component';
+import CollectionPageContainer from '../collection/collection.container';
+// import CollectionPage from '../collection/collection.component';
 
 // import { firestore, convertCollectionSnapshotToMap } from '../../firebase/firebase.utils';
 
 import { fetchCollectionsStartAsync } from '../../redux/shop/shop.actions';
-import { selectIsCollectionFetching, selectIsCollectionsLoaded } from '../../redux/shop/shop.selectors';
+// import { selectIsCollectionsLoaded } from '../../redux/shop/shop.selectors';
 // import { updateCollections } from '../../redux/shop/shop.actions';
 
-import WithSpinner from '../../components/with-spinner/with-spinner.component';
-
-const CollectionsOverviewWithSpinner = WithSpinner(CollectionsOverview);
-const CollectionPageWithSpinner = WithSpinner(CollectionPage);
+// 177.コンテナパターンにより削除
+// import WithSpinner from '../../components/with-spinner/with-spinner.component';
+// const CollectionsOverviewWithSpinner = WithSpinner(CollectionsOverview);
+// const CollectionPageWithSpinner = WithSpinner(CollectionPage);
 
 class ShopPage extends React.Component {
 	// -> redux-thunkに移した
@@ -73,7 +76,7 @@ class ShopPage extends React.Component {
 
 	render() {
 		// app.js内でRouteされてるので、propsとしてmatch受け取る
-		const { match, isCollectionFetching, isCollectionsLoaded } = this.props;
+		const { match } = this.props;
 		// const { loading } = this.state;
 		return (
 			// カテゴリ毎にCollectionPreviewコンポを出力
@@ -81,7 +84,7 @@ class ShopPage extends React.Component {
 				<Route
 					exact
 					path={`${match.path}`}
-					render={(props) => <CollectionsOverviewWithSpinner isLoading={isCollectionFetching} {...props} />}
+					component={CollectionsOverviewContainer}
 					// render={(props) => <CollectionsOverviewWithSpinner isLoading={isCollectionFetching} {...props} />}
 				/>
 				{/* <Route exact path={`${match.path}`} component={CollectionsOverview} /> */}
@@ -90,8 +93,8 @@ class ShopPage extends React.Component {
 					// カテゴリページでページ再読み込みするとエラー発生
 					// 先にrenderが発動
 					// isLoading = isFetching は 初期値false で渡される。読み込まれる
-					render={(props) => <CollectionPageWithSpinner isLoading={!isCollectionsLoaded} {...props} />}
-					// render={(props) => <CollectionPageWithSpinner isLoading={isCollectionFetching} {...props} />}
+					component={CollectionPageContainer}
+					// render={(props) => <CollectionPageWithSpinner isLoading={!isCollectionsLoaded} {...props} />}
 				/>
 				{/* <Route path={`${match.path}/:collectionId`} component={CollectionPage} /> */}
 			</div>
@@ -99,10 +102,11 @@ class ShopPage extends React.Component {
 	}
 }
 
-const mapStateToProps = createStructuredSelector({
-	isCollectionFetching: selectIsCollectionFetching,
-	isCollectionsLoaded: selectIsCollectionsLoaded,
-});
+// 177.コンテナパターン内で実施するので削除
+// const mapStateToProps = createStructuredSelector({
+// 	// isCollectionFetching: selectIsCollectionFetching,
+// 	isCollectionsLoaded: selectIsCollectionsLoaded,
+// });
 
 const mapDispatchToProps = (dispatch) => ({
 	fetchCollectionsStartAsync: () => dispatch(fetchCollectionsStartAsync()),
@@ -113,22 +117,30 @@ const mapDispatchToProps = (dispatch) => ({
 // 	updateCollections: (collectionsMap) => dispatch(updateCollections(collectionsMap)),
 // });
 
-export default connect(mapStateToProps, mapDispatchToProps)(ShopPage);
+export default connect(null, mapDispatchToProps)(ShopPage);
 
 //========================================
 // 166. Bringing Shop Data to our app
-// 	firestoreからデータを持ってきて、routeに必要な情報を追加した
+// 		firestoreからデータを持ってきて、routeに必要な情報を追加した
 // 167. Adding Shop Data to Redux
-//  redux.stateに保存する為に、action,reducer作成した
+//    redux.stateに保存する為に、action,reducer作成した
 // 169. WithSpinner HOC
-//	 データが返ってくるまではローディング中表示
+//	  データが返ってくるまではローディング中表示
 // 174. redux-thunk
-// 	 redux-thunkにより非同期でaction dispatch
-//   componentDidMount部分をredux-thunkへ移す
+// 	  redux-thunkにより非同期でaction dispatch
+// 		componentDidMount部分をredux-thunkへ移す
 // 176.
-// 	カテゴリページでページ再読み込みするとエラー発生
-// 	先にrenderが発動
-// 	isLoading = isFetching は 初期値false で渡される。読み込まれる
+// 		カテゴリページでページ再読み込みするとエラー発生
+// 		先にrenderが発動
+// 		isLoading = isFetching は 初期値false で渡される。読み込まれる
+// 177. コンテナパターン
+// 		コンテナ内でmapStateToProps,withSpinnerなどを実行?
+// 		使い所：　データをfetchしてきて子に渡すところ？
+//
+//
+//
+//
+//
 //
 //
 //
