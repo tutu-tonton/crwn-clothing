@@ -36,7 +36,9 @@ class ShopPage extends React.Component {
 		const { updateCollections } = this.props;
 		const collectionRef = firestore.collection('collections');
 
-		collectionRef.onSnapshot(async (snapshot) => {
+		// ??? オブザーバーパターン
+		// 一般的なdbでonSnapshot見たいのを実現したいとき？
+		collectionRef.get().then((snapshot) => {
 			// console.log(snapshot); // collection内に格納されてるドキュメントのメタ情報。配列形式
 			// データ引っ張ってきて、オブジェクト形式にする
 			const collectionsMap = convertCollectionSnapshotToMap(snapshot);
@@ -45,6 +47,20 @@ class ShopPage extends React.Component {
 			updateCollections(collectionsMap);
 			this.setState({ loading: false });
 		});
+		// -----
+		// collectionRef.onSnapshot(async (snapshot) => {
+		// 	// console.log(snapshot); // collection内に格納されてるドキュメントのメタ情報。配列形式
+		// 	// データ引っ張ってきて、オブジェクト形式にする
+		// 	const collectionsMap = convertCollectionSnapshotToMap(snapshot);
+		// 	// console.log(collectionsMap);	// オブジェクト形式になってるか確認
+		// 	// redux.stateに保存する
+		// 	updateCollections(collectionsMap);
+		// 	this.setState({ loading: false });
+		// });
+		// -----
+		// fetch('https://firestore.googleapis.com/v1/projects/crwn-db-dc266/databases/(default)/documents/collections')
+		// 	.then((response) => response.json())
+		// 	.then((collections) => console.log(collections));
 	}
 
 	render() {
